@@ -1,5 +1,17 @@
 import contract from '../contract/configContract.js'
 
+//<-----------------------ClashCheck----------------------->
+const dateclashCheck=async(taskDate)=>{
+    const tasks = await contract.methods.allTask().call();
+    const foundTask = tasks.find(task=>task.date===taskDate);
+
+    if(foundTask){
+        return foundTask.name;
+    }
+    return "No Task Found";
+}
+
+
 export const viewTask = async (req,res,next) => {
     try {
         const { taskID } = req.params;
@@ -46,13 +58,16 @@ export const viewAllTask = async (req, res, next) => {
     }
 }
 
-export const createTask = async (req, res, next) => {
-    try {
-        await contract.methods.createTask("task3","14/10/24").send({from:"0x901B9338E461B679Cb70e6b205Dca82529AB2CA1"})
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            error
-        });
+export const createTask=async(req,res)=>{
+    const {taskDate}=req.body; 
+    const task = await dateclashCheck(taskDate);
+    try{
+        if(task!=="No Task Found"){
+            res.status(409).json({status:409,message:"Date clash:Task cannot be added"})
+        }else{
+            res.status(200).json({status:200,message:"Task can be added"})
+        }
+    }catch(error){
+        console.error(error)
     }
 }
