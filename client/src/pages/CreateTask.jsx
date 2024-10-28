@@ -10,6 +10,9 @@ const CreateTask = ({ state }) => {
         const { contract, account } = state;
         const taskName = document.querySelector("#taskName").value;
         const taskDate = document.querySelector("#taskDate").value;
+        const showMessage = () => {
+            toast.success("Task created!")
+        }
         try {
             const res = await fetch("http://localhost:8000/api/create-task", {
                 method: "POST",
@@ -21,10 +24,8 @@ const CreateTask = ({ state }) => {
             const data = await res.json()
             if (data.status === 200) {
                 if (contract && contract.methods) {
-                    await contract.methods
-                        .createTask(taskName, taskDate)
-                        .send({ from: account })
-                    toast.success("Task created!")
+                    await contract.methods.createTask(taskName, taskDate).send({ from: account })
+                    showMessage()
                 }
             } else {
                 toast.error("Task cannot be added")

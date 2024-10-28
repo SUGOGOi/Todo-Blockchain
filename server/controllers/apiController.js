@@ -11,7 +11,7 @@ const dateclashCheck=async(taskDate)=>{
     return "No Task Found";
 }
 
-
+//<-----------------------VIEW FUNCTIONS----------------------->
 export const viewTask = async (req,res,next) => {
     try {
         const { taskID } = req.params;
@@ -58,6 +58,8 @@ export const viewAllTask = async (req, res, next) => {
     }
 }
 
+
+//<------------------------------WRITE FUNCTIONS------------------------------>
 export const createTask=async(req,res)=>{
     const {taskDate}=req.body; 
     const task = await dateclashCheck(taskDate);
@@ -69,5 +71,19 @@ export const createTask=async(req,res)=>{
         }
     }catch(error){
         console.error(error)
+    }
+}
+
+export const updateTask = async(req, res)=>{
+    const {taskDate}=req.body; 
+    const task = await dateclashCheck(taskDate);
+    try{
+      if(task!=="No Task Found"){
+         res.status(409).json({status:409,message:"Date clash:Task cannot be updated"})
+      }else{
+         res.status(200).json({status:200,message:"Task can be updated"})
+      }
+    }catch(error){
+     console.error(error)
     }
 }

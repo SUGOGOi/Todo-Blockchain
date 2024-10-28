@@ -144,6 +144,9 @@ nav li {
 /* =========NAVBAR END ==========  */
 
 /* =========VIEW ALL TASKS STARTS ==========  */
+.view_all_tasks{
+  margin-top: 40px
+}
 
 .view_all_tasks_card {
   background-color: #eb5429;
